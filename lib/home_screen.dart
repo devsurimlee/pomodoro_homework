@@ -5,11 +5,11 @@ import 'package:pomodoro_homework/widget/minutes.dart';
 import 'package:pomodoro_homework/widget/timer.dart';
 
 class HomeScreen extends StatefulWidget {
-  final Color colorRed;
+  final Color pointColor;
 
   const HomeScreen({
     super.key,
-    required this.colorRed,
+    required this.pointColor,
   });
 
   @override
@@ -37,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       isRunning = true;
-      print('onStartPressed');
     });
   }
 
@@ -50,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
     timer.cancel();
     setState(() {
       isRunning = false;
-      print('onPausePressed');
     });
   }
 
@@ -80,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 100,
             ),
             TimerWidget(
-              colorRed: widget.colorRed,
+              pointColor: widget.pointColor,
               minutes: formatTime(totalSeconds).split(':').first,
               seconds: formatTime(totalSeconds).split(':').last,
             ),
@@ -89,6 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             MinutesWidget(
               defaultTime: defaultTime,
+              pointColor: widget.pointColor,
             ),
             const SizedBox(
               height: 50,

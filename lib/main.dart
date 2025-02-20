@@ -17,7 +17,7 @@ class App extends StatelessWidget {
         scaffoldBackgroundColor: colorRed,
       ),
       home: const HomeScreen(
-        colorRed: colorRed,
+        pointColor: colorRed,
       ),
     );
   }

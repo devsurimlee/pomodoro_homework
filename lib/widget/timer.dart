@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class TimerWidget extends StatefulWidget {
-  final Color colorRed;
+  final Color pointColor;
   final String minutes;
   final String seconds;
 
   const TimerWidget({
     super.key,
-    required this.colorRed,
+    required this.pointColor,
     required this.minutes,
     required this.seconds,
   });
@@ -32,7 +32,7 @@ class _TimerWidgetState extends State<TimerWidget> {
             widget.minutes,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: widget.colorRed,
+              color: widget.pointColor,
               fontSize: 100,
               fontWeight: FontWeight.w600,
             ),
@@ -57,7 +57,7 @@ class _TimerWidgetState extends State<TimerWidget> {
             widget.seconds,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: widget.colorRed,
+              color: widget.pointColor,
               fontSize: 100,
               fontWeight: FontWeight.w600,
             ),
