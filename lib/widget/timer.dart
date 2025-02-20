@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 
-class TimerWidget extends StatelessWidget {
+class TimerWidget extends StatefulWidget {
   final Color colorRed;
+  final String minutes;
+  final String seconds;
 
   const TimerWidget({
     super.key,
     required this.colorRed,
+    required this.minutes,
+    required this.seconds,
   });
 
+  @override
+  State<TimerWidget> createState() => _TimerWidgetState();
+}
+
+class _TimerWidgetState extends State<TimerWidget> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -20,10 +29,10 @@ class TimerWidget extends StatelessWidget {
           width: 150,
           height: 150,
           child: Text(
-            '10',
+            widget.minutes,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: colorRed,
+              color: widget.colorRed,
               fontSize: 100,
               fontWeight: FontWeight.w600,
             ),
@@ -33,8 +42,8 @@ class TimerWidget extends StatelessWidget {
           ':',
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Colors.white38,
-            fontSize: 100,
+            color: Colors.white,
+            fontSize: 80,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -45,10 +54,10 @@ class TimerWidget extends StatelessWidget {
           width: 150,
           height: 150,
           child: Text(
-            '30',
+            widget.seconds,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: colorRed,
+              color: widget.colorRed,
               fontSize: 100,
               fontWeight: FontWeight.w600,
             ),
