@@ -1,8 +1,5 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:pomodoro_homework/widget/minutes.dart';
-import 'package:pomodoro_homework/widget/timer.dart';
 
 class HomeScreen extends StatefulWidget {
   final Color pointColor;
@@ -17,10 +14,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static const defaultTime = 25;
-  static int totalSeconds = defaultTime * 60;
+  int selectedTime = 0; // 디폴트 시간
+  int totalSeconds = 0;
   bool isRunning = false;
   late Timer timer;
+
+  int minTime = 15;
+  final timeGap = 5;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedTime = 25;
+    totalSeconds = selectedTime * 60;
+  }
 
   void ontTick(Timer timer) {
     setState(() {
@@ -52,6 +59,15 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  //////////////////////////
+  void tapMinutesButton(int time) {
+    setState(() {
+      selectedTime = time;
+      totalSeconds = selectedTime * 60;
+      print('tapMinutesButton $time');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,18 +93,93 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 100,
             ),
-            TimerWidget(
-              pointColor: widget.pointColor,
-              minutes: formatTime(totalSeconds).split(':').first,
-              seconds: formatTime(totalSeconds).split(':').last,
+            ///// timer start
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                  ),
+                  width: 150,
+                  height: 150,
+                  child: Text(
+                    formatTime(totalSeconds).split(':').first,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: widget.pointColor,
+                      fontSize: 100,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const Text(
+                  ':',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 80,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                  ),
+                  width: 150,
+                  height: 150,
+                  child: Text(
+                    formatTime(totalSeconds).split(':').last,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: widget.pointColor,
+                      fontSize: 100,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
             ),
+            ///// timer end
             const SizedBox(
               height: 50,
             ),
-            MinutesWidget(
-              defaultTime: defaultTime,
-              pointColor: widget.pointColor,
+            // Minutes start
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                for (int i = 0; i < 5; i++)
+                  GestureDetector(
+                    onTap: () => tapMinutesButton(minTime + (i * timeGap)),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: selectedTime == (minTime + (i * timeGap))
+                            ? Colors.white
+                            : widget.pointColor,
+                        border: Border.all(
+                          width: 2,
+                          color: Colors.white,
+                        ),
+                      ),
+                      width: 70,
+                      height: 50,
+                      child: Text(
+                        '${minTime + (i * timeGap)}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: selectedTime == (minTime + (i * timeGap))
+                              ? widget.pointColor
+                              : Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
+            ////// Minutes end
+
             const SizedBox(
               height: 50,
             ),
