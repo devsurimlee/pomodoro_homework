@@ -19,13 +19,17 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isRunning = false;
   late Timer timer;
 
-  int minTime = 15;
-  final timeGap = 5;
+  int minTime = 1; // 25
+  final timeGap = 1; // 5
 
   @override
   void initState() {
     super.initState();
-    selectedTime = 25;
+    selectedTime = 3; // 25
+    totalSeconds = selectedTime * 60;
+  }
+
+  void resetTimer() {
     totalSeconds = selectedTime * 60;
   }
 
@@ -34,6 +38,13 @@ class _HomeScreenState extends State<HomeScreen> {
       totalSeconds--;
       print('totalSeconds: $totalSeconds');
     });
+
+    // 1보다 작으면으로 변경하기
+    if (totalSeconds % 10 == 8) {
+      // 1로 변경하기
+      onPausePressed();
+      resetTimer();
+    }
   }
 
   void onStartPressed() {
