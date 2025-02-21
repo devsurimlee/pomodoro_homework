@@ -17,10 +17,14 @@ class _HomeScreenState extends State<HomeScreen> {
   int selectedTime = 0; // 디폴트 시간
   int totalSeconds = 0;
   bool isRunning = false;
+
   late Timer timer;
 
   final minTime = 15;
   final timeGap = 5;
+
+  bool isBreak = false;
+  final breakTime = 5;
 
   int roundCount = 0;
   final roundLimit = 4;
@@ -49,13 +53,33 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       totalSeconds--;
       print('totalSeconds: $totalSeconds');
+      print('isBreak $isBreak');
 
       // 1보다 작으면으로 변경하기 FIXME
       if (totalSeconds % 10 == 7) {
         onPausePressed();
-        doneTimer();
+
+        if (isBreak) {
+          // 쉬는시간 이었음
+          totalSeconds = selectedTime * 60;
+          isBreak = false;
+        } else {
+          // 쉬는시간 아님
+          totalSeconds = breakTime * 60;
+          isBreak = true;
+          doneTimer();
+          onStartPressed();
+        }
       }
     });
+  }
+
+  void resetAll() {
+    selectedTime = 25;
+    totalSeconds = selectedTime * 60;
+    roundCount = 0;
+    goalCount = 0;
+    onPausePressed();
   }
 
   void onStartPressed() {
@@ -69,11 +93,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  String formatTime(int seconds) {
-    final duration = Duration(seconds: seconds);
-    return duration.toString().split('.').first.substring(2, 7);
-  }
-
   void onPausePressed() {
     timer.cancel();
     setState(() {
@@ -81,12 +100,17 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  String formatTime(int seconds) {
+    final duration = Duration(seconds: seconds);
+    return duration.toString().split('.').first.substring(2, 7);
+  }
+
   //////////////////////////
-  void tapMinutesButton(int time) {
+  void changeTime(int time) {
     setState(() {
       selectedTime = time;
       totalSeconds = selectedTime * 60;
-      print('tapMinutesButton $time');
+      print('changeTime $time');
     });
   }
 
@@ -113,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             const SizedBox(
-              height: 100,
+              height: 50,
             ),
             ///// timer start
             Row(
@@ -172,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 for (int i = 0; i < 5; i++)
                   GestureDetector(
-                    onTap: () => tapMinutesButton(minTime + (i * timeGap)),
+                    onTap: () => changeTime(minTime + (i * timeGap)),
                     child: Container(
                       decoration: BoxDecoration(
                         color: selectedTime == (minTime + (i * timeGap))
@@ -201,21 +225,36 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             ////// Minutes end
+            ///
 
             const SizedBox(
               height: 50,
             ),
-            IconButton(
-              onPressed: isRunning ? onPausePressed : onStartPressed,
-              iconSize: 150,
-              color: Colors.white,
-              icon: Icon(isRunning
-                  ? Icons.pause_circle_outline
-                  : Icons.play_circle_outline),
-            ),
+
+            SizedBox(
+                height: 160,
+                child: isBreak
+                    ? const Text(
+                        "Break Time!",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 50,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )
+                    : IconButton(
+                        onPressed: isRunning ? onPausePressed : onStartPressed,
+                        iconSize: 150,
+                        color: Colors.white,
+                        icon: Icon(isRunning
+                            ? Icons.pause_circle_outline
+                            : Icons.play_circle_outline),
+                      )),
+
             const SizedBox(
               height: 50,
             ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
