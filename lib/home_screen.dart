@@ -22,6 +22,12 @@ class _HomeScreenState extends State<HomeScreen> {
   int minTime = 1; // 25
   final timeGap = 1; // 5
 
+  int roundCount = 0;
+  final roundLimit = 4; // 사이클
+
+  int goalCount = 0;
+  final goalLimit = 12;
+
   @override
   void initState() {
     super.initState();
@@ -29,22 +35,28 @@ class _HomeScreenState extends State<HomeScreen> {
     totalSeconds = selectedTime * 60;
   }
 
-  void resetTimer() {
+  void doneTimer() {
     totalSeconds = selectedTime * 60;
+    roundCount++;
+
+    if (roundCount == roundLimit) {
+      goalCount++;
+      roundCount = 0;
+    }
   }
 
   void ontTick(Timer timer) {
     setState(() {
       totalSeconds--;
       print('totalSeconds: $totalSeconds');
-    });
 
-    // 1보다 작으면으로 변경하기
-    if (totalSeconds % 10 == 8) {
-      // 1로 변경하기
-      onPausePressed();
-      resetTimer();
-    }
+      // 1보다 작으면으로 변경하기
+      if (totalSeconds % 10 == 8) {
+        // 1로 변경하기
+        onPausePressed();
+        doneTimer();
+      }
+    });
   }
 
   void onStartPressed() {
@@ -205,20 +217,20 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 50,
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Column(
                   children: [
                     Text(
-                      '0/4',
-                      style: TextStyle(
+                      '$roundCount/$roundLimit',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 25,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Text(
+                    const Text(
                       'ROUND',
                       style: TextStyle(
                         color: Colors.white,
@@ -231,14 +243,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 Column(
                   children: [
                     Text(
-                      '0/12',
-                      style: TextStyle(
+                      '$goalCount/$goalLimit',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 25,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Text(
+                    const Text(
                       'GOAL',
                       style: TextStyle(
                         color: Colors.white,
